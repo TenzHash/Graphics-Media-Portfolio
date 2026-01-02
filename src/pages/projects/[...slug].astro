@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import CustomCursor from '../../components/CustomCursor';
 import '../../styles/global.css';
 
+// 1. Generate pages for every markdown file in src/content/projects/
 export async function getStaticPaths() {
   const projectEntries = await getCollection('projects');
   return projectEntries.map(entry => ({
@@ -18,30 +19,46 @@ const { Content } = await entry.render();
 <html lang="en">
   <head>
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{entry.data.title} | Portfolio</title>
   </head>
-  <body class="bg-black text-white antialiased overflow-y-auto">
+  <body class="bg-black text-white antialiased overflow-y-auto selection:bg-blue-500">
     <CustomCursor client:only="react" />
-    <main class="max-w-5xl mx-auto px-6 py-20">
-      <nav class="mb-12">
-        <a href="/" class="text-[10px] font-black uppercase tracking-[0.4em] text-zinc-500 hover:text-blue-500">← Back</a>
+
+    <main class="max-w-5xl mx-auto px-6 py-12 md:py-20">
+      
+      <nav class="mb-12 md:mb-16">
+        <a href="/" class="group flex items-center gap-2 text-[10px] font-black uppercase tracking-[0.4em] text-zinc-500 hover:text-blue-500 transition-colors">
+          <span class="transition-transform group-hover:-translate-x-1">←</span> Back to Work
+        </a>
       </nav>
 
-      <header class="mb-16">
-        <h1 class="text-6xl md:text-8xl font-black uppercase leading-[0.8]">{entry.data.title}</h1>
+      <header class="mb-12 md:mb-20">
+        <span class="text-blue-500 text-[9px] md:text-[10px] font-bold tracking-[0.4em] uppercase">
+          {entry.data.category}
+        </span>
+        <h1 class="text-5xl md:text-8xl font-black uppercase leading-[0.9] md:leading-[0.8] mt-6 mb-6 md:mb-8 text-balance">
+          {entry.data.title}
+        </h1>
+        <p class="text-lg md:text-2xl text-zinc-400 max-w-3xl leading-relaxed">
+          {entry.data.description}
+        </p>
       </header>
 
-      <div class="relative w-full rounded-[2.5rem] overflow-hidden border border-zinc-800 bg-zinc-900 mb-20 shadow-2xl group">
+      <div class="relative w-full rounded-[1.5rem] md:rounded-[2.5rem] overflow-hidden border border-zinc-800 bg-zinc-900 mb-16 md:mb-24 shadow-2xl group">
         
         {entry.data.video_url ? (
-          /* CONTAINER: Variable height based on screen, fits any video ratio */
-          <div class="relative w-full h-[60vh] md:h-[80vh] flex justify-center items-center bg-black">
-         
+          /* CONTAINER: Adjusts height based on device (50vh mobile / 80vh desktop) */
+          <div class="relative w-full h-[50vh] md:h-[80vh] flex justify-center items-center bg-black">
+            
+            /* LAYER 1: Ambient Background (Blurred & Zoomed) */
             <video 
               src={entry.data.video_url} 
               autoplay muted loop playsinline 
-              class="absolute inset-0 w-full h-full object-cover opacity-30 blur-xl scale-110"
+              class="absolute inset-0 w-full h-full object-cover opacity-30 blur-2xl scale-110"
             />
+
+            /* LAYER 2: The Actual Video (Contained perfectly) */
             <video 
               src={entry.data.video_url} 
               controls autoplay muted loop playsinline 
@@ -50,14 +67,30 @@ const { Content } = await entry.render();
             
           </div>
         ) : (
-          <img src={entry.data.image} alt={entry.data.title} class="w-full h-auto object-cover" />
+          /* IMAGE FALLBACK */
+          <img 
+            src={entry.data.image} 
+            alt={entry.data.title} 
+            class="w-full h-auto object-cover"
+          />
         )}
 
       </div>
 
-      <article class="prose prose-invert max-w-none">
+      <article class="prose prose-invert prose-blue max-w-none 
+        prose-h2:text-3xl md:prose-h2:text-4xl prose-h2:font-black prose-h2:uppercase prose-h2:tracking-tighter prose-h2:mt-16
+        prose-p:text-zinc-400 prose-p:text-lg prose-p:leading-relaxed
+        prose-img:rounded-[2rem] prose-img:border prose-img:border-zinc-800 prose-img:shadow-2xl">
         <Content />
       </article>
+
+      <footer class="mt-32 pt-20 border-t border-zinc-900 text-center pb-20">
+        <p class="text-zinc-500 uppercase tracking-[0.4em] text-[10px] font-bold mb-8">Next Step</p>
+        <a href="/" class="text-4xl md:text-6xl font-black hover:text-blue-500 transition-colors uppercase leading-none">
+          View More Projects
+        </a>
+      </footer>
+
     </main>
   </body>
 </html>

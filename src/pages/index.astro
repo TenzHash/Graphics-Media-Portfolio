@@ -12,18 +12,20 @@ const allProjects = await getCollection('projects');
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Portfolio | Graphics & Multimedia</title>
+    <title>Portfolio</title>
   </head>
-  <body class="bg-black text-white antialiased overflow-hidden h-screen">
+  <body class="bg-black text-white antialiased overflow-hidden h-[100dvh]">
     <CustomCursor client:only="react" />
 
-    <main class="flex flex-col justify-between h-full w-full py-8 md:py-12">
-      <header class="flex-none text-center">
-        <h1 class="text-7xl md:text-[72px] font-black tracking-tighter leading-[0.8] uppercase">
-          Terrenze Josh Binamira
+    <main class="flex flex-col justify-between h-full w-full py-4 md:py-12">
+      
+      <header class="flex-none text-center px-4">
+        {/* Title scales from 5xl (Mobile) to 120px (Desktop) */}
+        <h1 class="text-6xl md:text-[120px] font-black tracking-tighter leading-[0.9] uppercase">
+          Work
         </h1>
-        <p class="text-zinc-500 text-[10px] md:text-[21px] font-bold tracking-[0.6em] uppercase mt-4 opacity-60">
-          Graphics & MultiMedia
+        <p class="text-zinc-500 text-[9px] md:text-[12px] font-bold tracking-[0.6em] uppercase mt-2 md:mt-6 opacity-60">
+          Graphics & Multi-Media
         </p>
       </header>
 
@@ -31,9 +33,10 @@ const allProjects = await getCollection('projects');
         <ProjectCarousel projects={allProjects} client:load />
       </div>
 
-      <footer class="flex-none flex justify-center pb-4">
+      <footer class="flex-none flex justify-center pb-4 md:pb-6">
         <ContactModal client:load />
       </footer>
+
     </main>
   </body>
 </html>
