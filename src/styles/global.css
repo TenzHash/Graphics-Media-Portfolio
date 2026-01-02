@@ -1,0 +1,24 @@
+@import "tailwindcss";
+
+@layer base {
+  body {
+    /* Using @apply with the new v4 import */
+    @apply bg-black text-white antialiased overflow-hidden;
+    height: 100vh;
+  }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* Smooth fade for the arrows */
+.group:hover .group-hover\:opacity-100 {
+  opacity: 1;
+}

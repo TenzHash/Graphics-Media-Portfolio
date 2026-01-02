@@ -1,11 +1,39 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import { getCollection } from 'astro:content';
+import ProjectCarousel from '../components/ProjectCarousel';
+import ContactModal from '../components/ContactModal';
+import CustomCursor from '../components/CustomCursor';
+import '../styles/global.css';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const allProjects = await getCollection('projects');
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Portfolio | Graphics & Multimedia</title>
+  </head>
+  <body class="bg-black text-white antialiased overflow-hidden h-screen">
+    <CustomCursor client:only="react" />
+
+    <main class="flex flex-col justify-between h-full w-full py-8 md:py-12">
+      <header class="flex-none text-center">
+        <h1 class="text-7xl md:text-[72px] font-black tracking-tighter leading-[0.8] uppercase">
+          Terrenze Josh Binamira
+        </h1>
+        <p class="text-zinc-500 text-[10px] md:text-[21px] font-bold tracking-[0.6em] uppercase mt-4 opacity-60">
+          Graphics & MultiMedia
+        </p>
+      </header>
+
+      <div class="flex-grow flex items-center w-full min-h-0 overflow-hidden">
+        <ProjectCarousel projects={allProjects} client:load />
+      </div>
+
+      <footer class="flex-none flex justify-center pb-4">
+        <ContactModal client:load />
+      </footer>
+    </main>
+  </body>
+</html>
