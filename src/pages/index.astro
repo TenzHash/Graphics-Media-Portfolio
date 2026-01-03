@@ -5,15 +5,31 @@ import ContactModal from '../components/ContactModal';
 import CustomCursor from '../components/CustomCursor';
 import '../styles/global.css';
 
+// --- PERSONALIZATION SETTINGS ---
+const MY_NAME = "Terrenze"; 
+const MY_ROLE = "Multimedia Designer";
+const SITE_DESCRIPTION = "Portfolio of a Graphics and Multimedia Artist specializing in graphics, branding, and video editing.";
+// --------------------------------
+
+// NEW CODE: Filter out anything marked 'featured: false'
 const allProjects = await getCollection('projects');
+const carouselProjects = allProjects.filter(p => p.data.featured !== false);
 ---
 
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Portfolio</title>
-  </head>
+    
+    <title>{MY_NAME} | {MY_ROLE}</title>
+    <meta name="description" content={SITE_DESCRIPTION} />
+    <meta name="generator" content={Astro.generator} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={`${MY_NAME} - Portfolio`} />
+    <meta property="og:description" content={SITE_DESCRIPTION} />
+    <meta property="og:image" content="/bg.jpg" /> </head>
+
   <body class="bg-black text-white antialiased overflow-hidden h-[100dvh]">
     <CustomCursor client:only="react" />
 
@@ -22,19 +38,27 @@ const allProjects = await getCollection('projects');
       <header class="flex-none text-center px-4">
         {/* Title scales from 5xl (Mobile) to 120px (Desktop) */}
         <h1 class="text-6xl md:text-[120px] font-black tracking-tighter leading-[0.9] uppercase">
-          Work
+          Terrenze Josh Binamira
         </h1>
         <p class="text-zinc-500 text-[9px] md:text-[12px] font-bold tracking-[0.6em] uppercase mt-2 md:mt-6 opacity-60">
-          Graphics & Multi-Media
+          Creative Content Producer / Multimedia Designer
         </p>
       </header>
 
       <div class="flex-grow flex items-center w-full min-h-0 overflow-hidden">
-        <ProjectCarousel projects={allProjects} client:load />
-      </div>
+  <ProjectCarousel projects={carouselProjects} client:load />
+</div>
 
-      <footer class="flex-none flex justify-center pb-4 md:pb-6">
+      <footer class="flex-none flex flex-col md:flex-row items-center justify-center gap-6 pb-6 md:pb-8 z-50 relative">
+        
+        {/* The New Gallery Button */}
+        <a href="/gallery" class="px-10 py-4 bg-zinc-900/50 border border-zinc-800 text-white-400 text-[10px] font-black uppercase tracking-[0.4em] rounded-full backdrop-blur-md hover:bg-white hover:text-black transition-all">
+          View Full Gallery
+        </a>
+
+        {/* Existing Contact Modal */}
         <ContactModal client:load />
+        
       </footer>
 
     </main>

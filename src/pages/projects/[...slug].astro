@@ -51,14 +51,12 @@ const { Content } = await entry.render();
           /* CONTAINER: Adjusts height based on device (50vh mobile / 80vh desktop) */
           <div class="relative w-full h-[50vh] md:h-[80vh] flex justify-center items-center bg-black">
             
-            /* LAYER 1: Ambient Background (Blurred & Zoomed) */
             <video 
               src={entry.data.video_url} 
               autoplay muted loop playsinline 
               class="absolute inset-0 w-full h-full object-cover opacity-30 blur-2xl scale-110"
             />
 
-            /* LAYER 2: The Actual Video (Contained perfectly) */
             <video 
               src={entry.data.video_url} 
               controls autoplay muted loop playsinline 

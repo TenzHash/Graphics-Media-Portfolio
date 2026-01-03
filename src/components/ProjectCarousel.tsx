@@ -31,37 +31,31 @@ export default function ProjectCarousel({ projects }: { projects: any[] }) {
               className="block relative group/card"
             >
               <div className="relative aspect-[9/14] md:aspect-[16/10] w-full rounded-[2rem] overflow-hidden bg-zinc-900 border border-zinc-800 transition-all duration-500 group-hover/card:border-blue-500 shadow-2xl">
-                {/* VIDEO LAYERS */}
-                {project.data.video_url ? (
-                  <>
-                    {/* Layer 0: Background Blur */}
-                    <video
-                      src={project.data.video_url}
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="absolute inset-0 w-full h-full object-cover opacity-50 blur-lg scale-110 z-0"
-                    />
-                    {/* Layer 1: Main Video (z-10) */}
-                    <video
-                      src={project.data.video_url}
-                      autoPlay
-                      loop
-                      muted
-                      playsInline
-                      className="absolute inset-0 w-full h-full object-contain z-10 p-2"
-                    />
-                  </>
-                ) : (
-                  <img
-                    src={project.data.image}
-                    alt={project.data.title}
-                    className="absolute inset-0 w-full h-full object-cover opacity-60 z-0"
+                {/* LAYER 1: The Static Image (ALWAYS there) 
+                    This acts as the "safety net". If the video lags, this is what shows.
+                */}
+                <img
+                  src={project.data.image}
+                  alt={project.data.title}
+                  className="absolute inset-0 w-full h-full object-cover opacity-100 z-0"
+                />
+
+                {/* LAYER 2: The Video (Sits on top) */}
+                {project.data.video_url && (
+                  <video
+                    src={project.data.video_url}
+                    poster={project.data.image} /* Native browser fallback */
+                    preload="auto" /* Tell browser to keep this ready */
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    /* object-cover: Fills the card. z-10 puts it above the image. */
+                    className="absolute inset-0 w-full h-full object-cover z-10"
                   />
                 )}
 
-                {/* TEXT LAYER: Added z-20 to sit ON TOP of the video */}
+                {/* LAYER 3: Text Content (Highest Z-index) */}
                 <div className="absolute inset-0 p-6 md:p-8 flex flex-col justify-end bg-gradient-to-t from-black via-black/20 to-transparent z-20">
                   <span className="text-[9px] md:text-[10px] font-bold tracking-[0.4em] uppercase text-blue-500 mb-2">
                     {project.data.category}

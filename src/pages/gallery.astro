@@ -1,0 +1,113 @@
+---
+import { getCollection } from 'astro:content';
+import CustomCursor from '../components/CustomCursor';
+import '../styles/global.css';
+
+const projects = await getCollection('projects');
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Index | Selected Works</title>
+  </head>
+  <body class="bg-black text-white antialiased overflow-y-auto selection:bg-blue-500">
+    <CustomCursor client:only="react" />
+
+    <main class="max-w-7xl mx-auto px-6 py-20">
+      
+      <header class="flex flex-col md:flex-row justify-between items-end mb-20 border-b border-zinc-900 pb-8">
+        <div>
+            <h1 class="text-6xl md:text-9xl font-black uppercase tracking-tighter leading-[0.8]">
+            Index
+            </h1>
+            <p class="text-zinc-500 font-bold uppercase tracking-[0.4em] mt-4 text-xs">
+            Selected Works (2024-2025)
+            </p>
+        </div>
+        <a href="/" class="hidden md:block text-xs font-bold uppercase tracking-[0.2em] hover:text-blue-500 transition-colors">
+            ← Back Home
+        </a>
+      </header>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {projects.map((project) => (
+          <a href={`/projects/${project.slug}`} class="group block project-card">
+            
+            <div class="relative aspect-square w-full overflow-hidden rounded-[2rem] bg-zinc-900 border border-zinc-800 transition-all duration-500 group-hover:border-blue-500 group-hover:scale-[1.02] shadow-2xl">
+              
+              {/* VIDEO LAYER: 
+                  preload="auto" is CRITICAL here so the browser can find the 2nd second mark 
+              */}
+              {project.data.video_url ? (
+                <video 
+                  src={project.data.video_url} 
+                  muted 
+                  loop 
+                  playsinline 
+                  preload="auto"
+                  class="absolute inset-0 w-full h-full object-cover z-10" 
+                />
+              ) : (
+                <img 
+                  src={project.data.image} 
+                  alt={project.data.title} 
+                  class="absolute inset-0 w-full h-full object-cover z-10" 
+                />
+              )}
+
+              {/* OVERLAY TEXT */}
+              <div class="absolute inset-0 p-6 flex flex-col justify-end bg-gradient-to-t from-black via-black/40 to-transparent z-20 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                <span class="text-[9px] font-bold uppercase tracking-[0.2em] text-blue-500 mb-1">{project.data.category}</span>
+                <h3 class="text-3xl font-black uppercase leading-none">{project.data.title}</h3>
+              </div>
+            </div>
+
+          </a>
+        ))}
+      </div>
+
+      <div class="mt-20 text-center md:hidden">
+         <a href="/" class="text-xs font-bold uppercase tracking-[0.2em] text-zinc-500">← Back Home</a>
+      </div>
+
+    </main>
+
+    <script>
+      const cards = document.querySelectorAll('.project-card');
+      
+      // CHANGE THIS NUMBER to adjust the thumbnail frame (in seconds)
+      const THUMBNAIL_TIME = 2.0; 
+
+      cards.forEach(card => {
+        const video = card.querySelector('video');
+        if (!video) return;
+
+        // 1. SET THE THUMBNAIL ON LOAD
+        // We wait for the video metadata to load, then jump to 2 seconds
+        const setThumbnail = () => {
+            video.currentTime = THUMBNAIL_TIME;
+        };
+
+        if (video.readyState >= 1) {
+            setThumbnail();
+        } else {
+            video.addEventListener('loadedmetadata', setThumbnail);
+        }
+
+        // 2. INTERACTION
+        card.addEventListener('mouseenter', () => {
+            // Play from the current spot (2s mark)
+            video.play().catch(e => console.log(e));
+        });
+
+        card.addEventListener('mouseleave', () => {
+            // Pause and SNAP BACK to the 2s mark
+            video.pause();
+            video.currentTime = THUMBNAIL_TIME;
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -8,6 +8,7 @@ const projects = defineCollection({
     category: z.string(),
     // YOU MUST ADD THIS LINE:
     video_url: z.string().optional(), 
+    featured: z.boolean().default(true),
   }),
 });
 
